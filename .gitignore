@@ -22,7 +22,10 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-
+composer.lock
+Makefile
+/docker
+phpstan-baseline.neon
 /storage/debugbar
 /storage/framework/cache/data/*
 /storage/framework/sessions/*
