@@ -1,0 +1,565 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Actions\\Fortify\\CreateNewUser\:\:create\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Fortify/CreateNewUser.php
+
+		-
+			message: '#^Method App\\Actions\\Fortify\\ResetUserPassword\:\:reset\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Fortify/ResetUserPassword.php
+
+		-
+			message: '#^Method App\\Actions\\Fortify\\UpdateUserPassword\:\:update\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Fortify/UpdateUserPassword.php
+
+		-
+			message: '#^Method App\\Actions\\Fortify\\UpdateUserPassword\:\:validate\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Fortify/UpdateUserPassword.php
+
+		-
+			message: '#^Method App\\Actions\\Fortify\\UpdateUserProfileInformation\:\:update\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Fortify/UpdateUserProfileInformation.php
+
+		-
+			message: '#^Method App\\Actions\\Jetstream\\CreateTeam\:\:create\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Jetstream/CreateTeam.php
+
+		-
+			message: '#^Method App\\Actions\\Jetstream\\UpdateTeamName\:\:update\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Jetstream/UpdateTeamName.php
+
+		-
+			message: '#^Call to function is_array\(\) with list\<array\{int, string, int\}\|string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:extractGroupedUseStatement\(\) has parameter \$tokens with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:extractGroupedUseStatement\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:extractUseStatement\(\) has parameter \$tokens with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:filterImportsByScope\(\) has parameter \$imports with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:filterImportsByScope\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:getPhpFiles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:getPsr4Mappings\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:isClassUseStatement\(\) has parameter \$tokens with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:isGroupedUseStatement\(\) has parameter \$tokens with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DumpCodebaseCommand\:\:parseImports\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<non\-falsy\-string\>\) to function array_filter does not contain falsy values, the array will always stay the same\.$#'
+			identifier: arrayFilter.same
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Property App\\Console\\Commands\\DumpCodebaseCommand\:\:\$addedFiles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Property App\\Console\\Commands\\DumpCodebaseCommand\:\:\$excludedFiles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Property App\\Console\\Commands\\DumpCodebaseCommand\:\:\$excludedFolders type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Property App\\Console\\Commands\\DumpCodebaseCommand\:\:\$fileContents type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Property App\\Console\\Commands\\DumpCodebaseCommand\:\:\$pathCache type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Property App\\Console\\Commands\\DumpCodebaseCommand\:\:\$skippedFiles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DumpCodebaseCommand.php
+
+		-
+			message: '#^Call to an undefined method App\\Console\\Commands\\VerifyJetstreamRolesCommand\:\:checkTeamIssues\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Console/Commands/VerifyJetstreamRolesCommand.php
+
+		-
+			message: '#^Call to an undefined method App\\Console\\Commands\\VerifyJetstreamRolesCommand\:\:fixTeamIssues\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Console/Commands/VerifyJetstreamRolesCommand.php
+
+		-
+			message: '#^Command "jetstream\:verify" does not have option "fix"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: app/Console/Commands/VerifyJetstreamRolesCommand.php
+
+		-
+			message: '#^Call to an undefined method App\\Http\\Controllers\\TeamController\:\:authorize\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/TeamController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/TeamController.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\BaseFormRequest\:\:validatedData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/BaseFormRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Team\\AddTeamMemberRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Team/AddTeamMemberRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Team\\AddTeamMemberRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Team/AddTeamMemberRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Team\\CreateTeamRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Team/CreateTeamRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Team\\CreateTeamRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Team/CreateTeamRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Team\\InviteTeamMemberRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Team/InviteTeamMemberRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Team\\InviteTeamMemberRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Team/InviteTeamMemberRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Team\\UpdateTeamNameRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Team/UpdateTeamNameRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\CreateUserRequest\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/CreateUserRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\CreateUserRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/CreateUserRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\CreateUserRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/CreateUserRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\ResetUserPasswordRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/ResetUserPasswordRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\UpdateUserPasswordRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/UpdateUserPasswordRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\UpdateUserPasswordRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/UpdateUserPasswordRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\UpdateUserProfileRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/UpdateUserProfileRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\User\\UpdateUserProfileRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/User/UpdateUserProfileRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamDetailResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamDetailResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamDetailResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamDetailResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamDetailResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamDetailResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamDetailResource\:\:\$owner\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamDetailResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamDetailResource\:\:\$personal_team\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamDetailResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamDetailResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamDetailResource.php
+
+		-
+			message: '#^Method App\\Http\\Resources\\TeamDetailResource\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Resources/TeamDetailResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamInvitationResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamInvitationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamInvitationResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamInvitationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamInvitationResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamInvitationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamInvitationResource\:\:\$role\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamInvitationResource.php
+
+		-
+			message: '#^Method App\\Http\\Resources\\TeamInvitationResource\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Resources/TeamInvitationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamResource\:\:\$owner\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Resources/TeamResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamResource\:\:\$personal_team\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TeamResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TeamResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$pivot\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$profile_photo_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Method App\\Http\\Resources\\UserResource\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Property App\\Models\\TeamInvitation\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/TeamInvitation.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$appends is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$appends\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\<string\>\)\: Unexpected token "\<", expected type at offset 19 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Services/Health/HealthCheckServiceInterface.php
+
+		-
+			message: '#^Method App\\Services\\Health\\Strategies\\CacheHealthCheckStrategy\:\:addDatabaseCacheMetrics\(\) has parameter \$health with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Health/Strategies/CacheHealthCheckStrategy.php
+
+		-
+			message: '#^Method App\\Services\\Health\\Strategies\\CacheHealthCheckStrategy\:\:addDriverSpecificMetrics\(\) has parameter \$health with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Health/Strategies/CacheHealthCheckStrategy.php
+
+		-
+			message: '#^Method App\\Services\\Health\\Strategies\\CacheHealthCheckStrategy\:\:addRedisMetrics\(\) has parameter \$health with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Health/Strategies/CacheHealthCheckStrategy.php
+
+		-
+			message: '#^Method App\\Services\\Health\\Strategies\\CacheHealthCheckStrategy\:\:performIntegrityCheck\(\) has parameter \$health with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Health/Strategies/CacheHealthCheckStrategy.php
+
+		-
+			message: '#^Unable to resolve the template type TCallbackReturnType in call to static method Illuminate\\Database\\Connection\:\:transaction\(\)$#'
+			identifier: argument.templateType
+			count: 1
+			path: app/Services/Team/TeamService.php
+
+		-
+			message: '#^Method App\\Services\\User\\UserService\:\:enableTwoFactorAuthentication\(\) has parameter \$recoveryCodes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/User/UserService.php
+
+		-
+			message: '#^Method App\\Services\\User\\UserService\:\:replaceTwoFactorRecoveryCodes\(\) has parameter \$recoveryCodes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/User/UserService.php
+
+		-
+			message: '#^Unable to resolve the template type TCallbackReturnType in call to static method Illuminate\\Database\\Connection\:\:transaction\(\)$#'
+			identifier: argument.templateType
+			count: 1
+			path: app/Services/User/UserService.php
+
+		-
+			message: '#^Method App\\Services\\User\\UserServiceInterface\:\:enableTwoFactorAuthentication\(\) has parameter \$recoveryCodes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/User/UserServiceInterface.php
+
+		-
+			message: '#^Method App\\Services\\User\\UserServiceInterface\:\:replaceTwoFactorRecoveryCodes\(\) has parameter \$recoveryCodes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/User/UserServiceInterface.php
+
+		-
+			message: '#^Method App\\Services\\Validation\\PasswordValidator\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Validation/PasswordValidator.php
+
+		-
+			message: '#^Method App\\Services\\Validation\\PasswordValidator\:\:rulesWithoutConfirmation\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Validation/PasswordValidator.php
+
+		-
+			message: '#^Parameter \#1 \$state of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Team\>\:\:state\(\) expects array\<string, mixed\>\|\(callable\(array\<string, mixed\>, Illuminate\\Database\\Eloquent\\Model\|null\)\: array\<string, mixed\>\), Closure\(array, App\\Models\\User\)\: array\{name\: non\-falsy\-string, user_id\: int, personal_team\: true\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/factories/UserFactory.php
+
+		-
+			message: '#^Property Tests\\Feature\\Fortify\\CreateNewUserTest\:\:\$teamServiceMock has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/Feature/Actions/Fortify/CreateNewUserTest.php
+
+		-
+			message: '#^Property Tests\\Feature\\Fortify\\CreateNewUserTest\:\:\$userServiceMock has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/Feature/Actions/Fortify/CreateNewUserTest.php
+
+		-
+			message: '#^Parameter \#2 \$team of method App\\Actions\\Jetstream\\AddTeamMember\:\:add\(\) expects App\\Models\\Team, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Feature/Actions/Jetstream/AddTeamMemberTest.php
+
+		-
+			message: '#^Parameter \#2 \$team of method App\\Actions\\Jetstream\\RemoveTeamMember\:\:remove\(\) expects App\\Models\\Team, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: tests/Feature/Actions/Jetstream/RemoveTeamMemberTest.php
+
+		-
+			message: '#^Property Tests\\Feature\\Fortify\\PasswordUpdateTest\:\:\$userServiceMock has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/Feature/Fortify/PasswordUpdateTest.php
+
+		-
+			message: '#^Property Tests\\Feature\\Jetstream\\InviteTeamMemberTest\:\:\$teamServiceMock has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/Feature/Jetstream/InviteTeamMemberTest.php
+
+		-
+			message: '#^Unable to resolve the template type TCallbackReturnType in call to static method Illuminate\\Database\\Connection\:\:transaction\(\)$#'
+			identifier: argument.templateType
+			count: 2
+			path: tests/Unit/Services/Concerns/ExecutesInTransactionTest.php

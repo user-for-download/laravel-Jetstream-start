@@ -1,0 +1,36 @@
+.dashboard-card {
+    @apply bg-white overflow-hidden shadow-sm rounded-lg transition-all duration-200;
+}
+
+.dashboard-card:hover {
+    @apply shadow-md transform -translate-y-1;
+}
+
+.stat-gradient-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-gradient-green {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-gradient-purple {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-gradient-yellow {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+.pulse-badge {
+    animation: pulse-badge 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

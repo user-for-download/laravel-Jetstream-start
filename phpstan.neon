@@ -1,0 +1,54 @@
+parameters:
+    level: 6
+
+    paths:
+        - app/
+        - config/
+        - database/
+        - routes/
+        - tests/
+
+    # Laravel-specific settings
+    checkModelProperties: true
+
+    ignoreErrors:
+        # --- Laravel Magic (can't fix, must ignore) ---
+
+        # Eloquent dynamic properties and relationships
+        - '#Access to an undefined property App\\Models\\(Team|User|TeamInvitation)::\$[a-z_]+#'
+        - '#Call to an undefined method App\\Models\\(Team|User|TeamInvitation)::[a-zA-Z_]+\(\)#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::(teams|ownedTeams|users|hasUser|hasUserWithEmail|membership)\(\)#'
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$[a-z_]+#'
+
+        # Livewire testing magic
+        - '#Access to an undefined property Livewire\\Features\\SupportTesting\\Testable::\$state#'
+
+        # Mockery dynamic mocks
+        - '#Call to an undefined method Mockery\\MockInterface::[a-zA-Z0-9_]+\(\)#'
+        - '#Parameter .* expects .* Mockery\\MockInterface given#'
+
+        # --- DTO Design (intentional patterns) ---
+
+        # BaseDto reflection magic is safe by design
+        - '#Unsafe usage of new static\(\)#'
+        - '#Call to an undefined method App\\DataTransferObjects\\BaseDto::fromRequest\(\)#'
+
+        # --- Test Code Quality (low priority) ---
+
+        # PHPUnit redundant assertions
+        - '#Call to method PHPUnit\\Framework\\Assert::assert(IsArray|True)\(\) with .* will always evaluate to true#'
+
+        # Template resolution in tests
+        - '#Unable to resolve the template type (TKey|TValue) in call to function collect#'
+
+        # --- Third Party Issues (not our code) ---
+
+        # Eloquent Factory PHPDoc mismatch
+        - '#PHPDoc type array<int, string> of property App\\Models\\.*::\$fillable is not covariant#'
+        - '#Return type .* of method Database\\Factories\\.*::definition\(\) should be compatible with#'
+
+        # Larastan Cache facade issue
+        - '#Call to an undefined static method Illuminate\\Support\\Facades\\Cache::getRedis\(\)#'
+
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
