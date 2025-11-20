@@ -8,6 +8,7 @@ use App\DataTransferObjects\Team\AddTeamMemberDto;
 use App\DataTransferObjects\Team\CreateTeamDto;
 use App\DataTransferObjects\Team\InviteTeamMemberDto;
 use App\DataTransferObjects\Team\UpdateTeamNameDto;
+use App\Enums\ActivityLogEnum;
 use App\Models\Team;
 use App\Models\TeamInvitation;
 use App\Models\User;
@@ -20,21 +21,92 @@ readonly class TeamService implements TeamServiceInterface
 {
     use ExecutesInTransaction;
 
-    private function ensureUserIsNotTeamOwner(User $user, Team $team): void
+    // =========================================================================
+    // Team Entity Management
+    // =========================================================================
+
+    public function createTeam(User $user, CreateTeamDto $createTeamDto): Team
     {
-        if ($user->id === $team->user_id) {
-            throw ValidationException::withMessages([
-                'team' => ['You may not leave a team that you created.'],
-            ]);
-        }
+        return $this->transaction(function () use ($user, $createTeamDto): Team {
+            $team = Team::create($createTeamDto->toTeamAttributes($user));
+
+            if (!$createTeamDto->personalTeam) {
+                $this->assignAdminRole($team, $user);
+            }
+
+            $this->logActivity($team, $user, ActivityLogEnum::TEAM_CREATED);
+
+            return $team;
+        });
     }
+
+    public function createPersonalTeam(User $user): Team
+    {
+        return $this->transaction(function () use ($user): Team {
+            $team = Team::create([
+                'user_id' => $user->id,
+                'name' => explode(' ', $user->name, 2)[0]."'s Team",
+                'personal_team' => true,
+            ]);
+
+            $this->ensureUserHasCurrentTeam($user, $team);
+
+            return $team;
+        });
+    }
+
+    public function updateTeamName(Team $team, UpdateTeamNameDto $updateTeamNameDto): void
+    {
+        $team->update(['name' => $updateTeamNameDto->name]);
+        // Activity log handled by Model Observer if configured, or can be added here explicitly
+    }
+
+    public function deleteTeam(Team $team): void
+    {
+        $this->transaction(function () use ($team): void {
+            $owner = $team->owner;
+            $wasCurrentTeam = $owner->current_team_id === $team->id;
+
+            $team->delete();
+
+            if ($wasCurrentTeam) {
+                $this->resetCurrentTeam($owner);
+            }
+        });
+    }
+
+    public function transferOwnership(Team $team, User $user): void
+    {
+        $this->transaction(function () use ($team, $user): void {
+            $oldOwner = $team->owner;
+
+            // Ensure both users end up as admins
+            $this->assignAdminRole($team, $oldOwner);
+            $team->forceFill(['user_id' => $user->id])->save();
+            $this->assignAdminRole($team, $user);
+
+            $team->refresh();
+
+            $this->logActivity($team, auth()->user(), ActivityLogEnum::OWNERSHIP_TRANSFERRED, [
+                'old_owner' => $oldOwner->email,
+                'new_owner' => $user->email,
+            ]);
+        });
+    }
+
+    // =========================================================================
+    // Membership Management
+    // =========================================================================
 
     public function addTeamMember(Team $team, AddTeamMemberDto $addTeamMemberDto): void
     {
         $newMember = Jetstream::findUserByEmailOrFail($addTeamMemberDto->email);
 
         $this->transaction(function () use ($team, $newMember, $addTeamMemberDto): void {
-            $team->users()->attach($newMember, [
+            $team->users()->attach($newMember, ['role' => $addTeamMemberDto->role]);
+
+            $this->logActivity($team, auth()->user(), ActivityLogEnum::MEMBER_ADDED, [
+                'member_email' => $newMember->email,
                 'role' => $addTeamMemberDto->role,
             ]);
         });
@@ -42,30 +114,35 @@ readonly class TeamService implements TeamServiceInterface
 
     public function removeTeamMember(Team $team, User $user): void
     {
-        $this->ensureUserIsNotTeamOwner($user, $team);
+        if ($user->id === $team->user_id) {
+            throw ValidationException::withMessages([
+                'team' => ['You may not leave a team that you created.'],
+            ]);
+        }
 
         $this->transaction(function () use ($team, $user): void {
             $team->users()->detach($user);
 
-            // CHANGED: Logic to auto-switch team if the user is leaving their current team
             if ($user->current_team_id === $team->id) {
-                $user->refresh(); // Refresh relations to exclude the removed team
-
-                // 1. Try to find their Personal Team first
-                // 2. Fallback to any other team they belong to
-                $nextTeam = $user->ownedTeams()->where('personal_team', true)->first()
-                    ?? $user->allTeams()->first();
-
-                if ($nextTeam) {
-                    $user->switchTeam($nextTeam);
-                } else {
-                    // No teams left
-                    $user->forceFill(['current_team_id' => null])->save();
-                }
+                $this->resetCurrentTeam($user->fresh());
             }
+
+            $this->logActivity($team, auth()->user(), ActivityLogEnum::MEMBER_REMOVED, [
+                'member_email' => $user->email,
+            ]);
 
             event(new TeamMemberRemoved($team, $user));
         });
+    }
+
+    public function updateTeamMemberRole(Team $team, User $user, string $role): void
+    {
+        $team->users()->updateExistingPivot($user->id, ['role' => $role]);
+
+        $this->logActivity($team, auth()->user(), ActivityLogEnum::ROLE_UPDATED, [
+            'member_email' => $user->email,
+            'new_role' => $role,
+        ]);
     }
 
     public function switchTeam(User $user, Team $team): void
@@ -76,125 +153,74 @@ readonly class TeamService implements TeamServiceInterface
             ]);
         }
 
-        $user->forceFill([
-            'current_team_id' => $team->id,
-        ])->save();
+        $user->forceFill(['current_team_id' => $team->id])->save();
     }
 
-    public function createTeam(User $user, CreateTeamDto $createTeamDto): Team
-    {
-        return $this->transaction(function () use ($user, $createTeamDto): Team {
-            $team = Team::create($createTeamDto->toTeamAttributes($user));
-
-            if (!$createTeamDto->personalTeam) {
-                $team->users()->attach($user, ['role' => 'admin']);
-            }
-
-            return $team;
-        });
-    }
-
-    public function deleteTeam(Team $team): void
-    {
-        $this->transaction(function () use ($team): void {
-            $owner = $team->owner;
-            $wasCurrentTeam = $owner->current_team_id === $team->id;
-
-            // Delete the team
-            $team->delete();
-
-            // If the deleted team was the current team, switch to another valid team
-            if ($wasCurrentTeam) {
-                $owner->refresh();
-
-                $nextTeam = $owner->allTeams()->first();
-
-                if ($nextTeam) {
-                    $owner->switchTeam($nextTeam);
-                } else {
-                    $owner->forceFill(['current_team_id' => null])->save();
-                }
-            }
-        });
-    }
-
-    public function updateTeamName(Team $team, UpdateTeamNameDto $updateTeamNameDto): void
-    {
-        $team->update([
-            'name' => $updateTeamNameDto->name,
-        ]);
-    }
+    // =========================================================================
+    // Invitation Management
+    // =========================================================================
 
     public function inviteTeamMember(Team $team, InviteTeamMemberDto $inviteTeamMemberDto): TeamInvitation
     {
-        return $this->transaction(fn (): TeamInvitation => $team->teamInvitations()->create([
-            'email' => $inviteTeamMemberDto->email,
-            'role' => $inviteTeamMemberDto->role,
-        ]));
-    }
+        return $this->transaction(function () use ($team, $inviteTeamMemberDto) {
+            $model = $team->teamInvitations()->create($inviteTeamMemberDto->toArray());
 
-    public function updateTeamMemberRole(Team $team, User $user, string $role): void
-    {
-        $team->users()->updateExistingPivot($user->id, [
-            'role' => $role,
-        ]);
+            $this->logActivity($team, auth()->user(), ActivityLogEnum::INVITATION_SENT, [
+                'invited_email' => $inviteTeamMemberDto->email,
+                'role' => $inviteTeamMemberDto->role,
+            ]);
+
+            return $model;
+        });
     }
 
     public function deleteTeamInvitation(Team $team, string $email): void
     {
-        $team->teamInvitations()
-            ->where('email', $email)
-            ->delete();
+        $team->teamInvitations()->where('email', $email)->delete();
+
+        $this->logActivity($team, auth()->user(), ActivityLogEnum::INVITATION_CANCELLED, [
+            'invited_email' => $email,
+        ]);
     }
 
-    public function createPersonalTeam(User $user): Team
+    // =========================================================================
+    // Private Helpers
+    // =========================================================================
+
+    private function assignAdminRole(Team $team, User $user): void
     {
-        return $this->transaction(function () use ($user): Team {
-            $team = Team::create([
-                'user_id' => $user->id,
-                'name' => $this->generatePersonalTeamName($user),
-                'personal_team' => true,
-            ]);
-
-            if ($user->current_team_id === null) {
-                $user->forceFill([
-                    'current_team_id' => $team->id,
-                ])->save();
-            }
-
-            return $team;
-        });
+        if ($team->users()->where('user_id', $user->id)->exists()) {
+            $team->users()->updateExistingPivot($user->id, ['role' => 'admin']);
+        } else {
+            $team->users()->attach($user, ['role' => 'admin']);
+        }
     }
 
-    private function generatePersonalTeamName(User $user): string
+    private function ensureUserHasCurrentTeam(User $user, Team $team): void
     {
-        $firstName = explode(' ', $user->name, 2)[0];
-
-        return $firstName."'s Team";
+        if ($user->current_team_id === null) {
+            $user->forceFill(['current_team_id' => $team->id])->save();
+        }
     }
 
-    public function transferOwnership(Team $team, User $user): void
+    private function resetCurrentTeam(User $user): void
     {
-        $this->transaction(function () use ($team, $user): void {
-            $oldOwner = $team->owner;
+        $nextTeam = $user->ownedTeams()->where('personal_team', true)->first()
+            ?? $user->allTeams()->first();
 
-            if ($team->users()->where('user_id', $oldOwner->id)->exists()) {
-                $team->users()->updateExistingPivot($oldOwner->id, ['role' => 'admin']);
-            } else {
-                $team->users()->attach($oldOwner, ['role' => 'admin']);
-            }
+        if ($nextTeam) {
+            $user->switchTeam($nextTeam);
+        } else {
+            $user->forceFill(['current_team_id' => null])->save();
+        }
+    }
 
-            $team->forceFill([
-                'user_id' => $user->id,
-            ])->save();
-
-            if ($team->users()->where('user_id', $user->id)->exists()) {
-                $team->users()->updateExistingPivot($user->id, ['role' => 'admin']);
-            } else {
-                $team->users()->attach($user, ['role' => 'admin']);
-            }
-
-            $team->refresh();
-        });
+    private function logActivity(Team $team, ?User $user, ActivityLogEnum $activityLogEnum, array $properties = []): void
+    {
+        activity()
+            ->performedOn($team)
+            ->causedBy($user)
+            ->withProperties($properties)
+            ->log($activityLogEnum->value);
     }
 }

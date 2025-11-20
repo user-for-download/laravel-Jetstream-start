@@ -14,9 +14,6 @@ final readonly class CreateUserDto
         public ?bool $termsAccepted = null,
     ) {}
 
-    /**
-     * Create DTO from request data with explicit mapping
-     */
     public static function fromRequest(array $data): self
     {
         return new self(
@@ -28,8 +25,17 @@ final readonly class CreateUserDto
         );
     }
 
+    public function toUserAttributes(): array
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password,
+        ];
+    }
+
     /**
-     * Convert DTO to array for model creation
+     * Added for Test Compatibility
      */
     public function toArray(): array
     {
@@ -39,18 +45,6 @@ final readonly class CreateUserDto
             'password' => $this->password,
             'password_confirmation' => $this->passwordConfirmation,
             'terms' => $this->termsAccepted,
-        ];
-    }
-
-    /**
-     * Get only the fields needed for User model creation
-     */
-    public function toUserAttributes(): array
-    {
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => bcrypt($this->password),
         ];
     }
 }

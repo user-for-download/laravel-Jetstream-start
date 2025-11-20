@@ -6,28 +6,23 @@ namespace App\Services\Health;
 
 interface HealthCheckServiceInterface
 {
-    /**
-     * @return array<string, mixed>
-     */
-    public function checkCache(): array;
+    public function checkCache(): HealthResult;
+
+    public function checkDatabase(): HealthResult;
+
+    public function checkQueue(): HealthResult;
+
+    public function checkStorage(): HealthResult;
 
     /**
-     * @return array<string, mixed>
-     */
-    public function checkDatabase(): array;
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function checkQueue(): array;
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function checkStorage(): array;
-
-    /**
-     * @param  array<string, array<string, mixed>>  $checks
+     * @param  array<string, array>  $checks
      */
     public function determineOverallStatus(array $checks): string;
+
+    /**
+     * Check all services and return an array of results.
+     *
+     * @return array<string, array>
+     */
+    public function checkAll(): array;
 }

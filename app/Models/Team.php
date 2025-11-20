@@ -12,37 +12,13 @@ use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
-/**
- * @property int $id
- * @property int $user_id
- * @property string $name
- * @property bool $personal_team
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\User|null $owner
- * @property-read Collection<int, \App\Models\TeamInvitation> $teamInvitations
- * @property-read int|null $team_invitations_count
- * @property-read \App\Models\Membership|null $membership
- * @property-read Collection<int, \App\Models\User> $users
- * @property-read int|null $users_count
- *
- * @method static \Database\Factories\TeamFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team wherePersonalTeam($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereUserId($value)
- *
- * @mixin \Eloquent
- */
 class Team extends JetstreamTeam
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'user_id',
@@ -63,17 +39,19 @@ class Team extends JetstreamTeam
         ];
     }
 
-    /**
-     * The "booted" method of the model.
-     * Refactoring: Ensure team cleanup handles members and invitations.
-     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn (string $eventName): string => 'Team has been '.$eventName);
+    }
+
     protected static function booted(): void
     {
         static::deleting(function (Team $team): void {
-            // 1. Remove all members
             $team->users()->detach();
-
-            // 2. Delete all pending invitations
             $team->teamInvitations()->delete();
         });
     }
@@ -89,11 +67,6 @@ class Team extends JetstreamTeam
         return $user->teamRole($this)?->key === $roleName;
     }
 
-    /**
-     * Проверить, имеет ли пользователь одну из ролей в команде
-     *
-     * @param  array<string|RoleEnum>  $roles
-     */
     public function userHasAnyRole(User $user, array $roles): bool
     {
         foreach ($roles as $role) {
@@ -105,11 +78,6 @@ class Team extends JetstreamTeam
         return false;
     }
 
-    /**
-     * Проверить, имеет ли пользователь все указанные разрешения
-     *
-     * @param  array<string|PermissionEnum>  $permissions
-     */
     public function userHasAllPermissions(User $user, array $permissions): bool
     {
         foreach ($permissions as $permission) {
@@ -125,11 +93,6 @@ class Team extends JetstreamTeam
         return true;
     }
 
-    /**
-     * Проверить, имеет ли пользователь хотя бы одно разрешение
-     *
-     * @param  array<string|PermissionEnum>  $permissions
-     */
     public function userHasAnyPermission(User $user, array $permissions): bool
     {
         foreach ($permissions as $permission) {
@@ -145,51 +108,31 @@ class Team extends JetstreamTeam
         return false;
     }
 
-    /**
-     * Получить всех администраторов команды
-     */
     public function getAdministrators(): Collection
     {
         return $this->allUsers()->filter(fn (\App\Models\User $user): bool => $this->userHasRole($user, RoleEnum::ADMIN) || $this->isOwner($user));
     }
 
-    /**
-     * Получить всех пользователей с определенной ролью
-     */
     public function getUsersByRole(string|RoleEnum $role): Collection
     {
         return $this->allUsers()->filter(fn (\App\Models\User $user): bool => $this->userHasRole($user, $role));
     }
 
-    /**
-     * Проверить, является ли команда личной
-     */
     public function isPersonal(): bool
     {
         return (bool) $this->personal_team;
     }
 
-    /**
-     * Проверить, является ли пользователь владельцем команды
-     */
     public function isOwner(User $user): bool
     {
         return $this->user_id === $user->id;
     }
 
-    /**
-     * Получить количество членов команды (включая владельца)
-     */
     public function getMembersCount(): int
     {
         return $this->allUsers()->count();
     }
 
-    /**
-     * Получить матрицу доступа для команды
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function getPermissionsMatrix(): array
     {
         $matrix = [];
@@ -208,9 +151,6 @@ class Team extends JetstreamTeam
         return $matrix;
     }
 
-    /**
-     * Преобразовать в строку
-     */
     public function toString(): string
     {
         return sprintf(
@@ -222,9 +162,6 @@ class Team extends JetstreamTeam
         );
     }
 
-    /**
-     * Магический метод для строкового представления
-     */
     public function __toString(): string
     {
         return $this->toString();

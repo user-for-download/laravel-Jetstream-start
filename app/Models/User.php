@@ -12,6 +12,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
@@ -20,6 +22,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use HasTeamRoles;
     use HasTeams;
+    use LogsActivity;
     use Notifiable;
     use TwoFactorAuthenticatable;
 
@@ -48,23 +51,21 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * The "booted" method of the model.
-     * Refactoring: Automated cleanup of related data upon deletion.
-     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn (string $eventName): string => 'User has been '.$eventName);
+    }
+
     protected static function booted(): void
     {
         static::deleting(function (User $user): void {
-            // 1. Detach from all teams
             $user->teams()->detach();
-
-            // 2. Delete owned teams (Model cascading)
             $user->ownedTeams->each->delete();
-
-            // 3. Delete profile photo from storage
             $user->deleteProfilePhoto();
-
-            // 4. Delete API tokens
             $user->tokens->each->delete();
         });
     }

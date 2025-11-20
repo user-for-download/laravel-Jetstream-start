@@ -66,4 +66,6 @@ interface UserServiceInterface
      * Replace two-factor recovery codes
      */
     public function replaceTwoFactorRecoveryCodes(User $user, array $recoveryCodes): void;
+
+    public function loadDashboardData(User $user): void;
 }

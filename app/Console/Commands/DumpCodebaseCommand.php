@@ -198,7 +198,7 @@ final class DumpCodebaseCommand extends Command
             $this->basePath.'/_ide_helper_models.php',
             $this->basePath.'/_ide_helper.php',
             $this->basePath.'/.phpstorm.meta.php',
-            $this->basePath.'/rector.php',
+            $this->basePath.'/,',
             $this->basePath.'/artisan',
         ];
     }

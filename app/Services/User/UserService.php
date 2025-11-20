@@ -19,16 +19,16 @@ readonly class UserService implements UserServiceInterface
 
     public function createUser(CreateUserDto $createUserDto): User
     {
-        return $this->transaction(fn (): User => User::create(
-            $createUserDto->toUserAttributes()
-        ));
+        // Logic moved: Hash the password here, not in the DTO
+        $attributes = $createUserDto->toUserAttributes();
+        $attributes['password'] = Hash::make($attributes['password']);
+
+        return $this->transaction(fn (): User => User::create($attributes));
     }
 
     public function deleteUser(User $user): void
     {
-        $this->transaction(function () use ($user): void {
-            $user->delete();
-        });
+        $this->transaction(fn () => $user->delete());
     }
 
     public function updateProfileInformation(User $user, UpdateUserProfileDto $updateUserProfileDto): void
@@ -38,44 +38,16 @@ readonly class UserService implements UserServiceInterface
                 $user->updateProfilePhoto($updateUserProfileDto->photo);
             }
 
-            if ($this->emailHasChanged($user, $updateUserProfileDto) && $this->userMustVerifyEmail($user)) {
+            if ($this->shouldVerifyEmail($user, $updateUserProfileDto)) {
                 $this->updateUserAndRequireEmailVerification($user, $updateUserProfileDto);
-            } else {
-                $this->updateUserProfile($user, $updateUserProfileDto);
+
+                return;
             }
+
+            $user->update($updateUserProfileDto->toArray());
         });
     }
 
-    private function emailHasChanged(User $user, UpdateUserProfileDto $updateUserProfileDto): bool
-    {
-        return $updateUserProfileDto->email !== $user->email;
-    }
-
-    private function userMustVerifyEmail(User $user): bool
-    {
-        return $user instanceof MustVerifyEmail;
-    }
-
-    private function updateUserAndRequireEmailVerification(User $user, UpdateUserProfileDto $updateUserProfileDto): void
-    {
-        $user->forceFill([
-            'name' => $updateUserProfileDto->name,
-            'email' => $updateUserProfileDto->email,
-            'email_verified_at' => null,
-        ])->save();
-
-        $user->sendEmailVerificationNotification();
-    }
-
-    private function updateUserProfile(User $user, UpdateUserProfileDto $updateUserProfileDto): void
-    {
-        $user->update([
-            'name' => $updateUserProfileDto->name,
-            'email' => $updateUserProfileDto->email,
-        ]);
-    }
-
-    // ... (Rest of standard methods like updatePassword, verifyEmail, etc. unchanged)
     public function updatePassword(User $user, UpdateUserPasswordDto $updateUserPasswordDto): void
     {
         $user->forceFill([
@@ -96,9 +68,7 @@ readonly class UserService implements UserServiceInterface
             return;
         }
 
-        $user->forceFill([
-            'email_verified_at' => now(),
-        ])->save();
+        $user->forceFill(['email_verified_at' => now()])->save();
     }
 
     public function updateProfilePhoto(User $user, string $path): void
@@ -107,9 +77,7 @@ readonly class UserService implements UserServiceInterface
             $user->deleteProfilePhoto();
         }
 
-        $user->forceFill([
-            'profile_photo_path' => $path,
-        ])->save();
+        $user->forceFill(['profile_photo_path' => $path])->save();
     }
 
     public function deleteProfilePhoto(User $user): void
@@ -141,5 +109,37 @@ readonly class UserService implements UserServiceInterface
         $user->forceFill([
             'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
         ])->save();
+    }
+
+    // --- Private Helpers ---
+
+    private function shouldVerifyEmail(User $user, UpdateUserProfileDto $updateUserProfileDto): bool
+    {
+        return $updateUserProfileDto->email !== $user->email && $user instanceof MustVerifyEmail;
+    }
+
+    private function updateUserAndRequireEmailVerification(User $user, UpdateUserProfileDto $updateUserProfileDto): void
+    {
+        $user->forceFill([
+            'name' => $updateUserProfileDto->name,
+            'email' => $updateUserProfileDto->email,
+            'email_verified_at' => null,
+        ])->save();
+
+        $user->sendEmailVerificationNotification();
+    }
+
+    /**
+     * Preloads all necessary relationships for the dashboard.
+     */
+    public function loadDashboardData(User $user): void
+    {
+        $user->load([
+            'teams',
+            'ownedTeams',
+            'currentTeam.users', // Load members
+            'currentTeam.owner', // Load owner details
+            'currentTeam.teamInvitations', // Load pending invites
+        ]);
     }
 }
