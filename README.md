@@ -24,38 +24,38 @@ A robust Laravel Jetstream application enhanced with a strict Service Layer arch
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/yourusername/project-name.git
-    cd project-name
+    git clone https://github.com/user-for-download/laravel-Jetstream-start.git
+    cd laravel-Jetstream-start
     ```
 
 2.  **Install Dependencies**
     ```bash
-    composer install
-    npm install
+    composer require laravel/sail --dev
+    php artisan sail:install
+    ./vendor/bin/sail up
     ```
 
 3.  **Environment Setup**
     ```bash
     cp .env.example .env
-    php artisan key:generate
+    sail artisan key:generate
     ```
 
-4.  **Database Setup**
+4.  **Setup**
     Configure your database credentials in `.env`, then run migrations and seeders. The seeder creates demo users and teams with various roles.
     ```bash
-    php artisan migrate --seed
+	./vendor/bin/sail artisan clear-compiled
+	./vendor/bin/sail artisan cache:clear
+	./vendor/bin/sail artisan route:clear
+	./vendor/bin/sail artisan view:clear
+	./vendor/bin/sail artisan config:clear
+	./vendor/bin/sail artisan optimize:clear
+	./vendor/bin/sail artisan migrate:fresh --seed
+	./vendor/bin/sail artisan jetstream:verify --show-recommendations
+#	./vendor/bin/sail artisan scout:import "App\Models\User"
+#	./vendor/bin/sail artisan scout:import "App\Models\Team"
+	./vendor/bin/sail npm run build
     ```
-
-5.  **Build Assets**
-    ```bash
-    npm run build
-    ```
-
-6.  **Run Local Server**
-    ```bash
-    php artisan serve
-    ```
-
 ## 🏗 Architecture Overview
 
 This project moves away from "Fat Controllers" by utilizing a Service Layer pattern:
