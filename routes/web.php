@@ -26,12 +26,4 @@ Route::middleware([
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
-
-    Route::get('/dashboard/owner', [DashboardController::class, 'owner'])
-        ->middleware('team.owner')
-        ->name('dashboard.owner');
-
-    Route::get('/dashboard/admin', [DashboardController::class, 'admin'])
-        ->middleware('team.role:admin')
-        ->name('dashboard.admin');
 });

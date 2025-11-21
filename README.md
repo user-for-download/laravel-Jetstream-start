@@ -3,6 +3,9 @@
 
 A robust Laravel Jetstream application enhanced with a strict Service Layer architecture, Data Transfer Objects (DTOs), and granular Role-Based Access Control (RBAC). This project demonstrates advanced team management workflows, including ownership transfer and custom dashboard widgets.
 
+# Tests:    
+*   3 risky, 9 skipped, 234 passed (497 assertions)
+
 ## 🚀 Key Features
 
 *   **Advanced Team Management**: Create teams, invite members, remove members, and **transfer team ownership**.
@@ -52,8 +55,6 @@ A robust Laravel Jetstream application enhanced with a strict Service Layer arch
 	./vendor/bin/sail artisan optimize:clear
 	./vendor/bin/sail artisan migrate:fresh --seed
 	./vendor/bin/sail artisan jetstream:verify --show-recommendations
-#	./vendor/bin/sail artisan scout:import "App\Models\User"
-#	./vendor/bin/sail artisan scout:import "App\Models\Team"
 	./vendor/bin/sail npm run build
     ```
 ## 🏗 Architecture Overview
@@ -81,11 +82,12 @@ The system uses `App\Enums\RoleEnum` to define access levels:
 The project includes a suite of tests to ensure stability.
 
 ```bash
-# Run all tests
-php artisan test
+  # Run all tests
+  sail artisan test
 
-# Run code style fixer
-./vendor/bin/pint
+  Tests:    3 risky, 9 skipped, 234 passed (497 assertions)
+  Duration: 12.38s
+
 ```
 
 ## 👤 Demo Accounts

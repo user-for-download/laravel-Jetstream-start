@@ -140,7 +140,8 @@
                         @foreach ($team->users->sortBy('name') as $user)
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
-                                    <img class="size-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}">
+                                    <img class="size-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}"
+                                         alt="{{ $user->name }}">
                                     <div class="ms-4">{{ $user->name }}</div>
                                 </div>
 
@@ -173,12 +174,14 @@
                                     @endif
 
                                     @if ($this->user->id === $user->id && $user->id !== $team->user_id)
-                                        <button class="cursor-pointer ms-6 text-sm text-red-500" wire:click="$toggle('confirmingLeavingTeam')">
+                                        <button class="cursor-pointer ms-6 text-sm text-red-500"
+                                                wire:click="$toggle('confirmingLeavingTeam')">
                                             {{ __('Leave') }}
                                         </button>
 
                                     @elseif (Gate::check('removeTeamMember', $team) && $user->id !== $team->user_id)
-                                        <button class="cursor-pointer ms-6 text-sm text-red-500" wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
+                                        <button class="cursor-pointer ms-6 text-sm text-red-500"
+                                                wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
                                             {{ __('Remove') }}
                                         </button>
                                     @endif

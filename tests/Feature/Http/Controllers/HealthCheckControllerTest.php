@@ -10,9 +10,9 @@ class HealthCheckControllerTest extends TestCase
 {
     public function test_health_endpoint_returns_successful_response(): void
     {
-        $response = $this->getJson('/health');
+        $testResponse = $this->getJson('/health');
 
-        $response->assertStatus(200)
+        $testResponse->assertStatus(200)
             ->assertJsonStructure([
                 'status',
                 'timestamp',
@@ -29,8 +29,8 @@ class HealthCheckControllerTest extends TestCase
 
     public function test_cache_check_returns_healthy_status(): void
     {
-        $response = $this->getJson('/health');
-        $cacheCheck = $response->json('checks.cache');
+        $testResponse = $this->getJson('/health');
+        $cacheCheck = $testResponse->json('checks.cache');
 
         $this->assertArrayHasKey('status', $cacheCheck);
         // Updated: Access 'driver' via 'meta'
@@ -40,8 +40,8 @@ class HealthCheckControllerTest extends TestCase
 
     public function test_database_check_returns_healthy_status(): void
     {
-        $response = $this->getJson('/health');
-        $dbCheck = $response->json('checks.database');
+        $testResponse = $this->getJson('/health');
+        $dbCheck = $testResponse->json('checks.database');
 
         $this->assertEquals('healthy', $dbCheck['status']);
         // Updated: Access via 'meta'
@@ -51,8 +51,8 @@ class HealthCheckControllerTest extends TestCase
 
     public function test_queue_check_includes_pending_jobs(): void
     {
-        $response = $this->getJson('/health');
-        $queueCheck = $response->json('checks.queue');
+        $testResponse = $this->getJson('/health');
+        $queueCheck = $testResponse->json('checks.queue');
 
         $this->assertArrayHasKey('status', $queueCheck);
         // Updated: Access via 'meta'
@@ -61,8 +61,8 @@ class HealthCheckControllerTest extends TestCase
 
     public function test_storage_check_includes_disk_metrics(): void
     {
-        $response = $this->getJson('/health');
-        $storageCheck = $response->json('checks.storage');
+        $testResponse = $this->getJson('/health');
+        $storageCheck = $testResponse->json('checks.storage');
 
         $this->assertArrayHasKey('status', $storageCheck);
         // Updated: Access via 'meta' and key name 'free'

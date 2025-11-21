@@ -10,7 +10,20 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
     ],
-
+    safelist: [
+        // For dynamic background colors
+        {
+            pattern: /bg-(red|green|blue|yellow|indigo|purple|pink|gray|amber|emerald|teal|lime|cyan|sky|violet|fuchsia|rose)-(100|200|300|400|500|600|700|800|900)/,
+        },
+        // For text colors if needed
+        {
+            pattern: /text-(red|green|blue|yellow|indigo|purple|pink|gray|amber|emerald|teal|lime|cyan|sky|violet|fuchsia|rose)-(500|600|700)/,
+        },
+        // For border colors
+        {
+            pattern: /border-(red|green|blue|yellow|indigo|purple|pink|gray|amber|emerald|teal|lime|cyan|sky|violet|fuchsia|rose)-(500|600)/,
+        },
+    ],
     theme: {
         extend: {
             fontFamily: {

@@ -46,7 +46,6 @@ class RoleBadge extends Component
         return match ($role) {
             RoleEnum::ADMIN->value, 'admin', 'owner' => 'red',
             RoleEnum::EDITOR->value, 'editor' => 'blue',
-            RoleEnum::VIEWER->value, 'viewer' => 'gray',
             default => 'gray',
         };
     }

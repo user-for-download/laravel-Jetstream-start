@@ -6,9 +6,6 @@ namespace Tests\Unit\Services\Health;
 
 use App\Services\Health\HealthCheckService;
 use App\Services\Health\HealthResult;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class HealthCheckServiceTest extends TestCase
@@ -23,38 +20,38 @@ class HealthCheckServiceTest extends TestCase
 
     public function test_cache_check_returns_healthy_status(): void
     {
-        $result = $this->healthCheckService->checkCache();
+        $healthResult = $this->healthCheckService->checkCache();
 
-        $this->assertInstanceOf(HealthResult::class, $result);
-        $this->assertEquals('healthy', $result->status);
-        $this->assertArrayHasKey('driver', $result->meta);
+        $this->assertInstanceOf(HealthResult::class, $healthResult);
+        $this->assertEquals('healthy', $healthResult->status);
+        $this->assertArrayHasKey('driver', $healthResult->meta);
     }
 
     public function test_database_check_returns_healthy_status(): void
     {
-        $result = $this->healthCheckService->checkDatabase();
+        $healthResult = $this->healthCheckService->checkDatabase();
 
-        $this->assertInstanceOf(HealthResult::class, $result);
-        $this->assertEquals('healthy', $result->status);
-        $this->assertArrayHasKey('connection', $result->meta);
+        $this->assertInstanceOf(HealthResult::class, $healthResult);
+        $this->assertEquals('healthy', $healthResult->status);
+        $this->assertArrayHasKey('connection', $healthResult->meta);
     }
 
     public function test_queue_check_returns_healthy_status(): void
     {
-        $result = $this->healthCheckService->checkQueue();
+        $healthResult = $this->healthCheckService->checkQueue();
 
-        $this->assertInstanceOf(HealthResult::class, $result);
-        $this->assertEquals('healthy', $result->status);
-        $this->assertArrayHasKey('driver', $result->meta);
+        $this->assertInstanceOf(HealthResult::class, $healthResult);
+        $this->assertEquals('healthy', $healthResult->status);
+        $this->assertArrayHasKey('driver', $healthResult->meta);
     }
 
     public function test_storage_check_returns_healthy_status(): void
     {
-        $result = $this->healthCheckService->checkStorage();
+        $healthResult = $this->healthCheckService->checkStorage();
 
-        $this->assertInstanceOf(HealthResult::class, $result);
-        $this->assertEquals('healthy', $result->status);
-        $this->assertArrayHasKey('free', $result->meta);
+        $this->assertInstanceOf(HealthResult::class, $healthResult);
+        $this->assertEquals('healthy', $healthResult->status);
+        $this->assertArrayHasKey('free', $healthResult->meta);
     }
 
     public function test_determine_overall_status_with_one_warning(): void

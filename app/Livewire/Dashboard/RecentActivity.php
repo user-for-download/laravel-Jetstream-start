@@ -21,15 +21,15 @@ class RecentActivity extends Component
 
         $this->activities = Activity::query()
             ->with(['causer', 'subject'])
-            ->where(function ($query) use ($user): void {
-                $query->where('causer_id', $user->id)
-                    ->where('causer_type', $user::class);
-            })
-            ->when($team, function ($query) use ($team): void {
-                $query->orWhere(function ($q) use ($team): void {
-                    $q->where('subject_id', $team->id)
-                        ->where('subject_type', $team::class);
-                });
+            // Logic: Show things I did OR things done to my Team
+            ->where(function ($query) use ($user, $team): void {
+                // 1. Things I did
+                $query->where(fn ($q) => $q->where('causer_id', $user->id)->where('causer_type', $user::class));
+
+                // 2. Things done to my current Team (by anyone, including System/Null)
+                if ($team) {
+                    $query->orWhere(fn ($q) => $q->where('subject_id', $team->id)->where('subject_type', $team::class));
+                }
             })
             ->latest()
             ->take(10)
@@ -43,7 +43,7 @@ class RecentActivity extends Component
             'id' => $activity->id,
             'type' => $activity->description,
             'description' => $this->generateDescription($activity),
-            'user' => $activity->causer->name ?? 'System',
+            'user' => $activity->causer->name ?? 'System', // Handle null causer
             'created_at' => $activity->created_at,
             'icon' => $this->getIconForEvent($activity->description),
             'color' => $this->getColorForEvent($activity->description),
@@ -52,22 +52,27 @@ class RecentActivity extends Component
 
     private function generateDescription(Activity $activity): string
     {
+        // Activity properties are cast to a Collection by Spatie
+        /** @var Collection $props */
         $props = $activity->properties;
         $subjectName = $activity->subject->name ?? 'Unknown';
 
         return match ($activity->description) {
-            // Use ->value for comparison
             ActivityLogEnum::MEMBER_ADDED->value => sprintf(
                 'Added %s as %s',
-                $props['member_email'] ?? 'a user',
-                $props['role'] ?? 'member'
+                $props->get('member_email', 'user'),
+                $props->get('role', 'member')
             ),
-            ActivityLogEnum::MEMBER_REMOVED->value => sprintf('Removed member %s', $props['member_email'] ?? ''),
-            ActivityLogEnum::INVITATION_SENT->value => sprintf('Invited %s', $props['invited_email'] ?? ''),
+            ActivityLogEnum::MEMBER_REMOVED->value => sprintf('Removed member %s', $props->get('member_email', 'unknown')),
+            ActivityLogEnum::INVITATION_SENT->value => sprintf('Invited %s', $props->get('invited_email', 'user')),
+            ActivityLogEnum::INVITATION_CANCELLED->value => sprintf('Cancelled invitation for %s', $props->get('invited_email', 'user')),
+            ActivityLogEnum::ROLE_UPDATED->value => sprintf(
+                'Updated role for %s to %s',
+                $props->get('member_email', 'user'),
+                $props->get('new_role', 'unknown')
+            ),
             ActivityLogEnum::TEAM_CREATED->value => sprintf('Created team "%s"', $subjectName),
             ActivityLogEnum::OWNERSHIP_TRANSFERRED->value => 'Transferred team ownership',
-            ActivityLogEnum::ROLE_UPDATED->value => sprintf('Updated role for %s to %s', $props['member_email'] ?? 'user', $props['new_role'] ?? ''),
-            ActivityLogEnum::INVITATION_CANCELLED->value => sprintf('Cancelled invitation for %s', $props['invited_email'] ?? ''),
             ActivityLogEnum::TEAM_UPDATED->value => 'Updated details',
             ActivityLogEnum::CREATED->value => 'Created record',
             default => $activity->description,

@@ -176,11 +176,12 @@ readonly class TeamService implements TeamServiceInterface
 
     public function deleteTeamInvitation(Team $team, string $email): void
     {
-        $team->teamInvitations()->where('email', $email)->delete();
-
-        $this->logActivity($team, auth()->user(), ActivityLogEnum::INVITATION_CANCELLED, [
-            'invited_email' => $email,
-        ]);
+        $deleted = $team->teamInvitations()->where('email', $email)->delete();
+        if ($deleted > 0) {
+            $this->logActivity($team, auth()->user(), ActivityLogEnum::INVITATION_CANCELLED, [
+                'invited_email' => $email,
+            ]);
+        }
     }
 
     // =========================================================================

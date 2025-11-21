@@ -18,6 +18,9 @@ final readonly class CreateNewUser implements CreatesNewUsers
         private TeamServiceInterface $teamService
     ) {}
 
+    /**
+     * @throws \Throwable
+     */
     public function create(array $input): User
     {
         $createUserDto = CreateUserDto::fromRequest($input);
